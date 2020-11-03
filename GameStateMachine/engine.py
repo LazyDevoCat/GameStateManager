@@ -21,10 +21,10 @@ import copy
 import sys
 
 import logging
+from typing import Union
 
 from GameStateMachine.clock import Clock
-from GameStateMachine.states import BaseGameState
-from GameStateMachine.states.empty import EmptyGameState
+from GameStateMachine.states import BaseGameState, StartGameState
 
 
 class GameEngine(object):
@@ -38,42 +38,45 @@ class GameEngine(object):
         self.time_delta_min = fps_max / 1000.0
 
         self.states = {}
-        self.active_state = None
+        self.active_state: Union[BaseGameState, None] = None
         self.init_states()
-        self.set_initial_state(EmptyGameState.state_name)
+        self.set_initial_state(StartGameState.state_name)
 
     def init_states(self) -> None:
         """
         Initializes states, return nothing
         :return: None
         """
-        EmptyGameState(None, self)
+        raise NotImplementedError("init_states method should be implemented in child classes")
 
     def set_initial_state(self, state_name):
         if state_name in self.states.keys():
             self.active_state = self.states[state_name]
             self.active_state.start()
+        else:
+            raise NameError("State name {} not found. Did you forget to init it?".format(state_name))
 
     def register_state(self, state: BaseGameState):
         if state.name not in self.states:
             self.states[state.name] = state
+        else:
+            raise NameError("State {} already exists".format(state.name))
 
     def run(self):
         while True:
             frame_time = self.clock.tick(self.fps)
             time_delta = min(frame_time / 1000.0, self.time_delta_min)
 
-            if self.active_state is not None and self.active_state is BaseGameState:
-                self.active_state.run(time_delta)
+            if self.active_state is None:
+                raise ValueError
 
-                if self.active_state.time_to_transition:
-                    self.transition()
+            self.active_state.run(time_delta)
 
-                if self.active_state.time_to_quit_app:
-                    break
-            else:
-                self.set_initial_state()
-                pass
+            if self.active_state.time_to_transition:
+                self.transition()
+
+            if self.active_state.time_to_quit_app:
+                break
 
         self.exit()
 
