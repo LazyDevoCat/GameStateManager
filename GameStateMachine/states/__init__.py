@@ -40,11 +40,14 @@ class BaseGameState(object):
         if target_state_name is not None:
             self.target_state_name = target_state_name
 
+    def start(self):
+        raise NotImplementedError
+
     def run(self, time_delta):
-        pass
+        raise NotImplementedError
 
     def end(self):
-        pass
+        raise NotImplementedError
 
     def quit(self):
         self.time_to_quit_app = True
