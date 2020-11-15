@@ -24,7 +24,7 @@ import logging
 from typing import Union
 
 from GameStateMachine.clock import Clock
-from GameStateMachine.states import BaseGameState, StartGameState
+from GameStateMachine.states import BaseGameState
 
 
 class GameEngine(object):
@@ -32,7 +32,7 @@ class GameEngine(object):
     Basic Game Engine class. It manages all game states.
     """
 
-    def __init__(self, clock: Clock, fps: int = 60, fps_max: int = 120):
+    def __init__(self, clock: Clock, initial_state_name: str, fps: int = 60, fps_max: int = 120):
         self.clock = clock
         self.fps = fps
         self.time_delta_min = fps_max / 1000.0
@@ -40,7 +40,7 @@ class GameEngine(object):
         self.states = {}
         self.active_state: Union[BaseGameState, None] = None
         self.init_states()
-        self.set_initial_state(StartGameState.state_name)
+        self.set_initial_state(initial_state_name)
 
     def init_states(self) -> None:
         """
@@ -72,16 +72,16 @@ class GameEngine(object):
 
             self.active_state.run(time_delta)
 
-            if self.active_state.time_to_transition:
-                self.transition()
-
             if self.active_state.time_to_quit_app:
                 break
+
+            if self.active_state.time_to_transition:
+                self.transition()
 
         self.exit()
 
     def transition(self):
-        logging.info('Transition: ' + self.active_state.name + ' -> ' + self.active_state.target_state_name)
+        logging.info('Transition: {} -> {}'.format(self.active_state.name, self.active_state.target_state_name))
         self.active_state.time_to_transition = False
         new_state_name = self.active_state.target_state_name
         # TODO refactor using return and params for transition data between states

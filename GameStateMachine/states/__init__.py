@@ -51,21 +51,3 @@ class BaseGameState(object):
 
     def quit(self):
         self.time_to_quit_app = True
-
-
-class StartGameState(BaseGameState):
-
-    state_name: str = 'start'
-
-    def __init__(self, target_state_name, state_manager):
-        super().__init__(target_state_name, state_manager)
-        self.time_to_transition = True
-
-    def start(self):
-        pass
-
-    def run(self, time_delta):
-        pass
-
-    def end(self):
-        pass
