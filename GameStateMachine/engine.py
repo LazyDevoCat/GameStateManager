@@ -32,7 +32,7 @@ class GameEngine(object):
     Basic Game Engine class. It manages all game states.
     """
 
-    def __init__(self, clock: Clock, initial_state_name: str, fps: int = 60, fps_max: int = 120):
+    def __init__(self, clock: Clock, initial_state_name: Union[str, None], fps: int = 60, fps_max: int = 120):
         self.clock = clock
         self.fps = fps
         self.time_delta_min = fps_max / 1000.0
@@ -40,7 +40,8 @@ class GameEngine(object):
         self.states = {}
         self.active_state: Union[BaseGameState, None] = None
         self.init_states()
-        self.set_initial_state(initial_state_name)
+        if initial_state_name is not None:
+            self.set_initial_state(initial_state_name)
 
     def init_states(self) -> None:
         """
@@ -52,7 +53,6 @@ class GameEngine(object):
     def set_initial_state(self, state_name):
         if state_name in self.states.keys():
             self.active_state = self.states[state_name]
-            self.active_state.start()
         else:
             raise NameError("State name {} not found. Did you forget to init it?".format(state_name))
 
@@ -69,6 +69,9 @@ class GameEngine(object):
 
             if self.active_state is None:
                 raise ValueError
+
+            if not self.active_state.started:
+                self.active_state.start()
 
             self.active_state.run(time_delta)
 

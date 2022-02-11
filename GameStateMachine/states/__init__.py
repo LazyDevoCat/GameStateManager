@@ -28,6 +28,7 @@ class BaseGameState(object):
         self.outgoing_transition_data = {}
         self.incoming_transition_data = {}
         self.state_manager = state_manager
+        self.started = False
         self.time_to_transition = False
         self.time_to_quit_app = False
         self.state_manager.register_state(self)
@@ -41,7 +42,7 @@ class BaseGameState(object):
             self.target_state_name = target_state_name
 
     def start(self):
-        raise NotImplementedError
+        self.started = True
 
     def run(self, time_delta):
         raise NotImplementedError
