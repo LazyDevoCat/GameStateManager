@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="GameStateMachine",
-    version="0.0.1",
+    version="0.0.2",
     author="Oleksii Bulba",
     author_email="oleksii.bulba@gmail.com",
     description="Game state machine - provides a game management based on a game state",
