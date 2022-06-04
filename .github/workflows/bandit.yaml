@@ -1,0 +1,8 @@
+name: Bandit security checkup
+on: [push]
+jobs:
+  run-bandit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Bandit security linter
+        uses: tj-actions/bandit@v5.1
