@@ -15,18 +15,21 @@
 #  along with this program. If not, see <https://www.gnu.org/licenses/>.
 #
 #  Oleksii Bulba
-#  oleksii.bulba@gmail.com
+#  oleksii.bulba+gamestatemachine@gmail.com
 
 import setuptools
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
+with open("version.txt", "r") as fh:
+    version = fh.read()
+
 setuptools.setup(
     name="GameStateMachine",
-    version="0.0.2",
+    version=version,
     author="Oleksii Bulba",
-    author_email="oleksii.bulba@gmail.com",
+    author_email="oleksii.bulba+gamestatemachine@gmail.com",
     description="Game state machine - provides a game management based on a game state",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -38,5 +41,5 @@ setuptools.setup(
         "Operating System :: OS Independent",
         "Topic :: Games/Entertainment"
     ],
-    python_requires='>=3.8.2'
+    python_requires='>=3.8.10'
 )

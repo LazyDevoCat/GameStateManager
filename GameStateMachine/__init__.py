@@ -15,7 +15,7 @@
 #  along with this program. If not, see <https://www.gnu.org/licenses/>.
 #
 #  Oleksii Bulba
-#  oleksii.bulba@gmail.com
+#  oleksii.bulba+gamestatemachine@gmail.com
 
 """Game State Machine is a wrapper class set of Python classes and modules
 that help manage game and game states. For instance, during game running
