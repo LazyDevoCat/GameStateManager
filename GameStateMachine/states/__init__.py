@@ -15,9 +15,9 @@
 #  along with this program. If not, see <https://www.gnu.org/licenses/>.
 #
 #  Oleksii Bulba
-#  oleksii.bulba@gmail.com
+#  oleksii.bulba+gamestatemachine@gmail.com
 
-class BaseGameState(object):
+class BaseGameState:
 
     state_name: str = 'base'
 
@@ -43,11 +43,14 @@ class BaseGameState(object):
     def start(self):
         self.started = True
 
-    def run(self, time_delta):
+    def run(self, time_delta: float):
         raise NotImplementedError
 
     def end(self):
         raise NotImplementedError
+
+    def before_quit(self):
+        pass
 
     def quit(self):
         self.time_to_quit_app = True

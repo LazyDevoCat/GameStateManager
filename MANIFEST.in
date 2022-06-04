@@ -1,0 +1,8 @@
+include README.md
+include COPYING
+include requirements.txt
+include version.txt
+include Makefile
+include MANIFEST.in
+include CHANGE.md
+recursive-include

@@ -1,0 +1,57 @@
+### Includes ###
+include ./.make/colors.mk
+
+### Variables ###
+NAME = GameStateManager
+VERSION = $(shell cat version.txt)
+OS = $(shell uname -s)
+
+#################
+
+.DEFAULT_GOAL := help
+.PHONY: help
+help:
+	@printf "$(BROWN) Project commands:$(NC)\n"
+	@printf "$(GREEN)	help\t$(NC)	Display this help message\n"
+	@printf "$(GREEN)	all\t$(NC)	Clean, install venv and build the package\n"
+	@printf "$(GREEN)	init\t$(NC)	Initialize the package for development\n"
+	@printf "$(GREEN)	install\t$(NC)	Install package for testing\n"
+	@printf "$(GREEN)	clean\t$(NC)	Clean package from artefacts\n"
+	@printf "$(GREEN)	python\t$(NC)	Build the package\n"
+	@printf "$(GREEN)	version\t$(NC)	Display the package version\n"
+
+.PHONY: all
+all: clean python
+
+venv: venv/touchfile
+
+venv/touchfile: requirements.txt
+	test -d venv || virtualenv venv
+	. venv/bin/activate; pip install -Ur requirements.txt
+	touch venv/touchfile
+
+.PHONY: init
+init: venv
+
+.PHONY: clean
+clean:
+	@echo "Cleaning up distutils stuff"
+	rm -rf build
+	rm -rf ./GameStateMachine.egg-info/
+	@echo "Cleaning up byte compiled python stuff"
+	find . -maxdepth 1 -type d -name "__pycache__" -delete
+	@echo "Cleaning venv"
+	rm -rf venv
+	find -iname "*.pyc" -delete
+
+.PHONY: python
+python:
+	. venv/bin/activate; python setup.py build
+
+.PHONY: install
+install:
+	. venv/bin/activate; python setup.py install
+
+.PHONY: version
+version:
+	@echo $(VERSION)

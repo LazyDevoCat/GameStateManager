@@ -15,12 +15,12 @@
 #  along with this program. If not, see <https://www.gnu.org/licenses/>.
 #
 #  Oleksii Bulba
-#  oleksii.bulba@gmail.com
+#  oleksii.bulba+gamestatemachine@gmail.com
 
 import time
 
 
-class Clock(object):
+class Clock:
     def __init__(self):
         self.now_time = self.last_tick = time.time()
         self.time_passed = None
