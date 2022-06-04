@@ -6,16 +6,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.3] - 2022-06-04
+### Changed
+- Project refresh;
+- Added Makefile with commands for package building;
+- Added MANIFEST.in file for including files into distributed package;
+- Added requirements.txt file (no requirements so far, the package does not depend on pygame);
+- Added version.txt file;
+- Added method before_quit to state, this method is run for all states before app is closed;
+- Added type float to time_delta argument in state run method;
+- Dumped minimum python requirements to 3.8.10 (was 3.8.2);
+
 ## [0.0.2] - 2022-02-12
 ### Changed
-- If initial_state_name is empty do not set it
+- If initial_state_name is empty do not set it;
 
 ### Fixed
-- Fixed a bug when initial state was started two times
+- Fixed a bug when initial state was started two times;
 
 ## [0.0.1] - 2020-11-02
 Project created
 ### Added
-- Created game state engine and base state classes
-- Added GNU General Public License v3.0
-- Created CHANGE.md and README.md files
+- Created game state engine and base state classes;
+- Added GNU General Public License v3.0;
+- Created CHANGE.md and README.md files;
