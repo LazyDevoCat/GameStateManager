@@ -28,6 +28,7 @@ venv: venv/touchfile
 venv/touchfile: requirements.txt
 	test -d venv || virtualenv venv
 	. venv/bin/activate; pip install -Ur requirements.txt
+	@echo "To activate python virtual environment, please run the command '. venv/bin/activate'"
 	touch venv/touchfile
 
 .PHONY: init
@@ -43,6 +44,7 @@ clean:
 	@echo "Cleaning venv"
 	rm -rf venv
 	find -iname "*.pyc" -delete
+	@echo "Please run 'deactivate' to deactivate python virtual environment"
 
 .PHONY: python
 python:
