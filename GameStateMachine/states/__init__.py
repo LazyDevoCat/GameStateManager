@@ -17,15 +17,16 @@
 #  Oleksii Bulba
 #  oleksii.bulba+gamestatemachine@gmail.com
 
-class BaseGameState:
+from abc import ABC, abstractmethod
+from typing import Any
 
+
+class BaseGameState(ABC):
     state_name: str = 'base'
 
     def __init__(self, target_state_name, state_manager):
         self.name = self.state_name
         self.target_state_name = target_state_name
-        self.outgoing_transition_data = {}
-        self.incoming_transition_data = {}
         self.state_manager = state_manager
         self.started = False
         self.time_to_transition = False
@@ -33,6 +34,10 @@ class BaseGameState:
         self.state_manager.register_state(self)
 
     def set_target_state_name(self, target_name):
+        """
+        Target name is a target state name that will be used to transition to in case current game state will trigger.
+        transitioning
+        """
         self.target_state_name = target_name
 
     def trigger_transition(self, target_state_name: str = None):
@@ -40,17 +45,49 @@ class BaseGameState:
         if target_state_name is not None:
             self.target_state_name = target_state_name
 
-    def start(self):
+    def start(self, incoming_data: Any):
+        """
+        Process here any incoming data,
+        don't forget to call "super().start()" method or set "self.started" to True otherwise.
+        """
         self.started = True
 
-    def run(self, time_delta: float):
-        raise NotImplementedError
+    def run(self):
+        while True:
+            self.inputs()
+            self.update()
+            self.draw()
+            self.loop()
 
-    def end(self):
-        raise NotImplementedError
+    @abstractmethod
+    def inputs(self):
+        """Processing all inputs from the user (mouse, keyboard, timer, etc. events)"""
+        pass
+
+    @abstractmethod
+    def update(self):
+        """Update everything here"""
+        pass
+
+    @abstractmethod
+    def draw(self):
+        """Draw everything here"""
+        pass
+
+    @abstractmethod
+    def loop(self):
+        """Define how fast your loop should run here"""
+        pass
+
+    @abstractmethod
+    def end(self) -> Any:
+        """Process any outgoing data here"""
+        pass
 
     def before_quit(self):
+        """The method will be run before the whole app is quiting"""
         pass
 
     def quit(self):
+        """Trigger quiting from the app"""
         self.time_to_quit_app = True
