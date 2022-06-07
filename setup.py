@@ -36,10 +36,11 @@ setuptools.setup(
     url="https://github.com/OleksiiBulba/GameStateManager",
     packages=setuptools.find_packages(),
     classifiers=[
-        "Programming Language :: Python :: 3",
+        "Development Status :: 2 - Pre-Alpha",
+        "Programming Language :: Python :: 3.10",
         "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
         "Operating System :: OS Independent",
-        "Topic :: Games/Entertainment"
+        "Topic :: Games/Entertainment",
     ],
     python_requires='>=3.8.10'
 )

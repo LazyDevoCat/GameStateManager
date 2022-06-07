@@ -17,26 +17,23 @@
 #  Oleksii Bulba
 #  oleksii.bulba+gamestatemachine@gmail.com
 
-import copy
 import sys
 
 import logging
 from typing import Union
 
-from GameStateMachine.clock import Clock
 from GameStateMachine.states import BaseGameState
 
 
 class GameEngine:
     """
-    Basic Game Engine class. It manages all game states.
+    Basic Game Engine class. It manages all the game states.
+    To create a Game class that inherits GameEngine, your Game class needs to implement the method init_states that
+    initializes all game states that inherits BaseGameState, BaseGameState class contains a call to register_state here,
+    so all created game states will auto registered here.
     """
 
-    def __init__(self, clock: Clock, initial_state_name: Union[str, None], fps: int = 60, fps_max: int = 120):
-        self.clock = clock
-        self.fps = fps
-        self.time_delta_min = fps_max / 1000.0
-
+    def __init__(self, initial_state_name: Union[str, None]):
         self.states = {}
         self.active_state: Union[BaseGameState, None] = None
         self.init_states()
@@ -64,16 +61,13 @@ class GameEngine:
 
     def run(self):
         while True:
-            frame_time = self.clock.tick(self.fps)
-            time_delta = min(frame_time / 1000.0, self.time_delta_min)
-
             if self.active_state is None:
                 raise ValueError
 
             if not self.active_state.started:
                 self.active_state.start()
 
-            self.active_state.run(time_delta)
+            self.active_state.run()
 
             if self.active_state.time_to_quit_app:
                 break
@@ -87,15 +81,9 @@ class GameEngine:
         new_state_name = self.active_state.target_state_name
         logging.info(f'Transition from "{self.active_state.name}" -> to "{new_state_name}"')
         self.active_state.time_to_transition = False
-        # TODO refactor using return and params for transition data between states
-        # data = self.active_state.end()
-        self.active_state.end()
-        outgoing_data_copy = copy.deepcopy(self.active_state.outgoing_transition_data)
+        transitioning_data = self.active_state.end()
         self.active_state = self.states[new_state_name]
-        self.active_state.incoming_transition_data = outgoing_data_copy
-        # TODO refactor using return and params for transition data between states
-        # self.active_state.start(data)
-        self.active_state.start()
+        self.active_state.start(transitioning_data)
 
     def exit(self):
         self.active_state.end()
