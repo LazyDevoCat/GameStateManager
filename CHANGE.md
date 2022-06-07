@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.0.4] - 2022-06-07
 ### Changed
 - Marked all "abstract" methods with "@abstractmethod" from ABC package, removed raising an exception;
 - Removed any transition data inside game states and moved it to return values of the method "end" and argument of the method "start";
