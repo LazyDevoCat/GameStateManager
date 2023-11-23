@@ -23,10 +23,15 @@ help:
 .PHONY: all
 all: clean python
 
+pip-upgrade:
+	. venv/bin/activate; python -m pip install --upgrade pip
+
+venv-test:
+	test -d venv || virtualenv venv
+
 venv: venv/touchfile
 
-venv/touchfile: requirements.txt
-	test -d venv || virtualenv venv
+venv/touchfile: requirements.txt venv-test pip-upgrade
 	. venv/bin/activate; pip install -Ur requirements.txt
 	@echo "To activate python virtual environment, please run the command '. venv/bin/activate'"
 	touch venv/touchfile

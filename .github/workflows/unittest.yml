@@ -1,0 +1,42 @@
+name: Python Unit Tests
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+      - develop
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.is_develop }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        is_develop: [false]
+        python-version: [3.7.*, 3.8.*, 3.9.*, 3.10.*, 3.11.*, 3.12.*]
+        include:
+          - python-version: 3.13.0-alpha.1
+            is_develop: true
+            os: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run tests
+      run: python -m unittest discover -s . -p 'test*.py'
