@@ -1,5 +1,5 @@
 #  GameStateManager - provides a game management based on a game state
-#  Copyright (C) 2020-2022  Oleksii Bulba
+#  Copyright (C) 2020-2023  Oleksii Bulba
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -18,14 +18,14 @@
 #  oleksii.bulba+gamestatemachine@gmail.com
 
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import Any, Union
 
 
 class BaseGameState(ABC):
     state_name: str = 'base'
 
-    def __init__(self, target_state_name, state_manager):
-        self.name = self.state_name
+    def __init__(self, target_state_name: Union[str, None], state_manager, state_name: str = None):
+        self.name = state_name if state_name is not None else self.state_name
         self.target_state_name = target_state_name
         self.state_manager = state_manager
         self.started = False
@@ -42,10 +42,11 @@ class BaseGameState(ABC):
 
     def trigger_transition(self, target_state_name: str = None):
         self.time_to_transition = True
-        if target_state_name is not None:
-            self.target_state_name = target_state_name
+        target_state_name = target_state_name if target_state_name is not None else self.target_state_name
+        assert target_state_name is not None, 'target state name cannot be None'
+        self.target_state_name = target_state_name
 
-    def start(self, incoming_data: Any):
+    def start(self, incoming_data: Any = None):
         """
         Process here any incoming data,
         don't forget to call "super().start()" method or set "self.started" to True otherwise.

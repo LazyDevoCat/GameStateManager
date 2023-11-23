@@ -1,5 +1,5 @@
 #  GameStateManager - provides a game management based on a game state
-#  Copyright (C) 2020-2022  Oleksii Bulba
+#  Copyright (C) 2020-2023  Oleksii Bulba
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
 #  Oleksii Bulba
 #  oleksii.bulba+gamestatemachine@gmail.com
 
+from abc import abstractmethod, ABC
 import sys
 
 import logging
@@ -25,7 +26,7 @@ from typing import Union
 from GameStateMachine.states import BaseGameState
 
 
-class GameEngine:
+class GameEngine(ABC):
     """
     Basic Game Engine class. It manages all the game states.
     To create a Game class that inherits GameEngine, your Game class needs to implement the method init_states that
@@ -40,18 +41,19 @@ class GameEngine:
         if initial_state_name is not None:
             self.set_initial_state(initial_state_name)
 
+    @abstractmethod
     def init_states(self) -> None:
         """
         Initializes states, return nothing
         :return: None
         """
-        raise NotImplementedError('init_states method should be implemented in child classes')
+        raise NotImplementedError(f'{__name__} method should be implemented in child classes')
 
     def set_initial_state(self, state_name):
         if state_name in self.states.keys():
             self.active_state = self.states[state_name]
         else:
-            raise NameError(f'State name {state_name} not found. Did you forget to init it?')
+            raise NameError(f'State name {state_name} not found. Did you forget to initialize it?')
 
     def register_state(self, state: BaseGameState):
         if state.name not in self.states:
@@ -62,7 +64,7 @@ class GameEngine:
     def run(self):
         while True:
             if self.active_state is None:
-                raise ValueError
+                raise ValueError('Active state is not defined')
 
             if not self.active_state.started:
                 self.active_state.start()
@@ -87,6 +89,6 @@ class GameEngine:
 
     def exit(self):
         self.active_state.end()
-        for state in self.states:
+        for state in self.states.values():
             state.before_quit()
         sys.exit()
